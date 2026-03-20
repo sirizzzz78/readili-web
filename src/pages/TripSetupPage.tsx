@@ -216,8 +216,8 @@ export function TripSetupPage() {
         {step === 1 && (
           <div style={{ padding: '1.5rem var(--page-px) 0' }}>
             <h2 className="font-semibold text-[var(--text-primary)]" style={{ fontSize: 'var(--text-page-title)' }}>Where are you headed?</h2>
-            <p className="text-[15px] text-[var(--text-secondary)] mt-2">Enter your destination city or country.</p>
-            <Card className="mt-6 flex items-center gap-3 p-4">
+            <p className="text-[var(--text-secondary)]" style={{ fontSize: 'var(--text-body-sm)', marginTop: 'var(--step-heading-gap)' }}>Enter your destination city or country.</p>
+            <Card className="flex items-center gap-3 p-4" style={{ marginTop: 'var(--step-content-gap)' }}>
               <MapPin size={18} className="text-[var(--lavender)] shrink-0" />
               <input
                 type="text"
@@ -240,9 +240,9 @@ export function TripSetupPage() {
         {step === 2 && (
           <div style={{ padding: '1.5rem var(--page-px) 0' }}>
             <h2 className="font-semibold text-[var(--text-primary)]" style={{ fontSize: 'var(--text-page-title)' }}>Tell us about your trip</h2>
-            <p className="text-[15px] text-[var(--text-secondary)] mt-2">We'll tailor your packing list to match.</p>
+            <p className="text-[var(--text-secondary)]" style={{ fontSize: 'var(--text-body-sm)', marginTop: 'var(--step-heading-gap)' }}>We'll tailor your packing list to match.</p>
 
-            <p className="text-[11px] font-semibold uppercase tracking-[1.5px] text-[var(--blue-faint)] mt-6 mb-1">Trip type</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[1.5px] text-[var(--blue-faint)] mb-1" style={{ marginTop: 'var(--step-content-gap)' }}>Trip type</p>
             <p className="text-[12px] text-[var(--text-secondary)] mb-2.5">Select one</p>
             <div className="grid grid-cols-2 gap-3">
               {[
@@ -291,9 +291,9 @@ export function TripSetupPage() {
         {step === 3 && (
           <div style={{ padding: '1.5rem var(--page-px) 0' }}>
             <h2 className="font-semibold text-[var(--text-primary)]" style={{ fontSize: 'var(--text-page-title)' }}>When are you traveling?</h2>
-            <p className="text-[15px] text-[var(--text-secondary)] mt-2">Pick your departure and return dates.</p>
+            <p className="text-[var(--text-secondary)]" style={{ fontSize: 'var(--text-body-sm)', marginTop: 'var(--step-heading-gap)' }}>Pick your departure and return dates.</p>
 
-            <div className="flex flex-col gap-3 mt-6">
+            <div className="flex flex-col gap-3" style={{ marginTop: 'var(--step-content-gap)' }}>
               <Card className="p-4">
                 <div className="flex items-center gap-3">
                   <PlaneTakeoff size={18} className="text-[var(--lavender)] shrink-0" />
@@ -342,9 +342,9 @@ export function TripSetupPage() {
         {step === 4 && (
           <div style={{ padding: '1.5rem var(--page-px) 0' }}>
             <h2 className="font-semibold text-[var(--text-primary)]" style={{ fontSize: 'var(--text-page-title)' }}>Will you do laundry?</h2>
-            <p className="text-[15px] text-[var(--text-secondary)] mt-2">Pick the days you'll have access to laundry.</p>
+            <p className="text-[var(--text-secondary)]" style={{ fontSize: 'var(--text-body-sm)', marginTop: 'var(--step-heading-gap)' }}>Pick the days you'll have access to laundry.</p>
 
-            <Card className="mt-6 p-4">
+            <Card className="p-4" style={{ marginTop: 'var(--step-content-gap)' }}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <LucideIcon name="washing-machine" size={18} className="text-[var(--salmon)]" />
@@ -393,9 +393,9 @@ export function TripSetupPage() {
         {step === 5 && (
           <div style={{ padding: '1.5rem var(--page-px) 0' }}>
             <h2 className="font-semibold text-[var(--text-primary)]" style={{ fontSize: 'var(--text-page-title)' }}>How many days per outfit?</h2>
-            <p className="text-[15px] text-[var(--text-secondary)] mt-2">Pack fewer outfits the more days you wear each one.</p>
+            <p className="text-[var(--text-secondary)]" style={{ fontSize: 'var(--text-body-sm)', marginTop: 'var(--step-heading-gap)' }}>Pack fewer outfits the more days you wear each one.</p>
 
-            <Card className="mt-6 p-5">
+            <Card className="p-5" style={{ marginTop: 'var(--step-content-gap)' }}>
               <div className="flex items-center gap-3 mb-5">
                 <Repeat size={18} className="text-[var(--lavender)]" />
                 <span className="text-[16px] font-medium text-[var(--text-primary)]">Days per outfit</span>
@@ -436,8 +436,8 @@ export function TripSetupPage() {
         {step === 6 && (
           <div className="overflow-y-auto" style={{ padding: '1.5rem var(--page-px) 1rem' }}>
             <h2 className="font-semibold text-[var(--text-primary)]" style={{ fontSize: 'var(--text-page-title)' }}>What's on the agenda?</h2>
-            <div className="flex items-center justify-between mt-2">
-              <p className="text-[15px] text-[var(--text-secondary)]">Select all that apply.</p>
+            <div className="flex items-center justify-between" style={{ marginTop: 'var(--step-heading-gap)' }}>
+              <p className="text-[var(--text-secondary)]" style={{ fontSize: 'var(--text-body-sm)' }}>Select all that apply.</p>
               {selectedActivities.size > 0 && (
                 <span className="text-[13px] font-semibold text-[var(--lavender)] px-2.5 py-1 rounded-lg"
                   style={{ backgroundColor: 'color-mix(in srgb, var(--lavender) 15%, transparent)' }}>
@@ -446,7 +446,7 @@ export function TripSetupPage() {
               )}
             </div>
 
-            <p className="text-[11px] font-semibold uppercase tracking-[1.5px] text-[var(--blue-faint)] mt-6 mb-2.5">Activities</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[1.5px] text-[var(--blue-faint)] mb-2.5" style={{ marginTop: 'var(--step-content-gap)' }}>Activities</p>
             <div className="grid grid-cols-3 gap-3">
               {ACTIVITY_LIST.map(act => {
                 const selected = selectedActivities.has(act.id);
