@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Backpack, Map, Compass, CheckCircle2, Bell } from 'lucide-react';
+import { Backpack, Map, Compass, CheckCircle2 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import { requestNotificationPermission } from '../lib/notifications';
 
 interface OnboardingPageProps {
   onComplete: () => void;
@@ -10,10 +9,9 @@ interface OnboardingPageProps {
 
 export function OnboardingPage({ onComplete }: OnboardingPageProps) {
   const [page, setPage] = useState(0);
-  const [notifRequested, setNotifRequested] = useState(false);
 
   const handleNext = () => {
-    if (page < 2) {
+    if (page < 1) {
       setPage(page + 1);
     } else {
       onComplete();
@@ -78,47 +76,12 @@ export function OnboardingPage({ onComplete }: OnboardingPageProps) {
             </Card>
           </div>
         )}
-
-        {page === 2 && (
-          <div className="flex flex-col items-center justify-center h-full px-5 gap-6">
-            <div className="w-36 h-36 flex items-center justify-center rounded-[14px]"
-              style={{ backgroundColor: 'color-mix(in srgb, var(--lavender) 15%, transparent)' }}>
-              <Bell size={80} className="text-[var(--lavender)]" />
-            </div>
-            <div className="text-center">
-              <h1 className="text-[32px] font-semibold text-[var(--text-primary)] tracking-tight leading-tight">
-                Don't leave it{'\n'}to the last minute
-              </h1>
-              <p className="text-[16px] text-[var(--text-secondary)] mt-3 px-6">
-                Get a heads-up 3 days and 1 day before departure so you can pack without the rush.
-              </p>
-            </div>
-            {!notifRequested ? (
-              <div className="w-full max-w-sm flex flex-col gap-2">
-                <Button onClick={async () => {
-                  await requestNotificationPermission();
-                  setNotifRequested(true);
-                }}>
-                  Allow Notifications
-                </Button>
-                <button
-                  onClick={() => setNotifRequested(true)}
-                  className="text-[15px] font-medium text-[var(--text-secondary)] py-2"
-                >
-                  Maybe Later
-                </button>
-              </div>
-            ) : (
-              <p className="text-[15px] font-medium text-[var(--salmon)]">You're all set.</p>
-            )}
-          </div>
-        )}
       </div>
 
       {/* Dots + Next */}
       <div className="px-5 pb-12 pt-4 flex flex-col items-center gap-5">
         <div className="flex gap-2">
-          {[0, 1, 2].map(i => (
+          {[0, 1].map(i => (
             <div
               key={i}
               className={`h-1 rounded-full transition-all duration-300 ${
@@ -129,7 +92,7 @@ export function OnboardingPage({ onComplete }: OnboardingPageProps) {
         </div>
         <div className="w-full max-w-sm">
           <Button onClick={handleNext}>
-            {page < 2 ? 'Next' : 'Get Started'}
+            {page < 1 ? 'Next' : 'Get Started'}
           </Button>
         </div>
       </div>
