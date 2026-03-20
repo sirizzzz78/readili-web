@@ -100,7 +100,7 @@ export function PostTripFeedbackSheet({ tripId, onClose }: PostTripFeedbackSheet
         <p className="text-[11px] font-semibold uppercase tracking-[1.5px] text-[var(--blue-faint)] mb-2">
           What do you wish you'd brought?
         </p>
-        <Card className="p-4 flex items-center gap-2">
+        <Card className="flex items-center gap-2">
           <input
             type="text"
             value={newName}

@@ -43,7 +43,7 @@ export const TripCard = memo(function TripCard({ trip, items, isPast, onDuplicat
       }`}
       onClick={() => navigate(`/trip/${trip.id}`)}
     >
-      <div className="p-4">
+      <div className="p-5">
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
             <h3 className={`font-semibold truncate ${isPast ? 'text-[var(--blue-faint)]' : 'text-[var(--text-primary)]'}`} style={{ fontSize: 'var(--text-card-title)' }}>
@@ -123,7 +123,7 @@ export const TripCard = memo(function TripCard({ trip, items, isPast, onDuplicat
       </div>
 
       {/* Progress bar */}
-      <div className="px-4 pb-4 flex items-center gap-2">
+      <div className="px-5 pb-5 flex items-center gap-2">
         <div className="flex-1">
           <ProgressBar progress={progress} complete={complete} />
         </div>

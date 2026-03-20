@@ -95,7 +95,7 @@ export function EditTripSheet({ trip, onClose }: EditTripSheetProps) {
     <div className="px-6 pb-8 max-h-[70dvh] overflow-y-auto">
       <div className="flex flex-col gap-5">
         {/* Destination */}
-        <Card className="flex items-center gap-3 p-4">
+        <Card className="flex items-center gap-3">
           <MapPin size={18} className="text-[var(--lavender)] shrink-0" />
           <input type="text" value={destination} onChange={e => setDestination(e.target.value)}
             className="flex-1 bg-transparent text-[16px] text-[var(--text-primary)] outline-none" placeholder="Destination" />
@@ -103,7 +103,7 @@ export function EditTripSheet({ trip, onClose }: EditTripSheetProps) {
 
         {/* Dates */}
         <div className="flex flex-col gap-2">
-          <Card className="p-4 flex items-center gap-3">
+          <Card className="flex items-center gap-3">
             <PlaneTakeoff size={18} className="text-[var(--lavender)]" />
             <span className="text-[15px] font-medium text-[var(--text-primary)]">Departure</span>
             <span className="flex-1" />
@@ -112,7 +112,7 @@ export function EditTripSheet({ trip, onClose }: EditTripSheetProps) {
               if (new Date(e.target.value) >= new Date(endDate)) setEndDate(toISODate(addDays(new Date(e.target.value), 1)));
             }} className="bg-transparent text-[15px] text-[var(--lavender)] outline-none" />
           </Card>
-          <Card className="p-4 flex items-center gap-3">
+          <Card className="flex items-center gap-3">
             <PlaneLanding size={18} className="text-[var(--lavender)]" />
             <span className="text-[15px] font-medium text-[var(--text-primary)]">Return</span>
             <span className="flex-1" />
@@ -154,7 +154,7 @@ export function EditTripSheet({ trip, onClose }: EditTripSheetProps) {
         </div>
 
         {/* Laundry */}
-        <Card className="p-4">
+        <Card>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <LucideIcon name="washing-machine" size={18} className="text-[var(--salmon)]" />
@@ -180,7 +180,7 @@ export function EditTripSheet({ trip, onClose }: EditTripSheetProps) {
         </Card>
 
         {/* Rewear */}
-        <Card className="p-4">
+        <Card>
           <div className="flex items-center gap-3 mb-4">
             <Repeat size={18} className="text-[var(--lavender)]" />
             <span className="text-[16px] font-medium text-[var(--text-primary)]">Days per outfit</span>

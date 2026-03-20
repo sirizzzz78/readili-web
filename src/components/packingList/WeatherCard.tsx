@@ -34,7 +34,7 @@ export function WeatherCardComponent({ summary }: WeatherCardProps) {
   const [fahrenheit, setFahrenheit] = useState(detectDefaultUnit);
 
   return (
-    <Card className="p-4">
+    <Card>
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">

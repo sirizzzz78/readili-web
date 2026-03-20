@@ -220,7 +220,7 @@ export function PackingListPage() {
       <div className="pb-12 flex flex-col gap-5" style={{ padding: '0 var(--page-px) 3rem' }}>
         {/* Archive banner */}
         {isPast && (
-          <div className="flex items-center gap-3 p-4 rounded-[14px]"
+          <div className="flex items-center gap-3 p-5 rounded-[14px]"
             style={{ backgroundColor: 'color-mix(in srgb, var(--lavender) 10%, transparent)', border: '1px solid color-mix(in srgb, var(--lavender) 30%, transparent)' }}>
             <BadgeCheck size={20} className="text-[var(--lavender)] shrink-0" />
             <div>
@@ -232,7 +232,7 @@ export function PackingListPage() {
 
         {/* Carry-on banner */}
         {restrictedItems.length > 0 && (
-          <div className="flex items-center gap-3 p-4 rounded-[14px]"
+          <div className="flex items-center gap-3 p-5 rounded-[14px]"
             style={{ backgroundColor: 'color-mix(in srgb, var(--salmon) 8%, transparent)', border: '1px solid color-mix(in srgb, var(--salmon) 25%, transparent)' }}>
             <LucideIcon name="plane" size={16} className="text-[var(--salmon)] shrink-0" />
             <div>
@@ -245,7 +245,7 @@ export function PackingListPage() {
         )}
 
         {/* Progress card */}
-        <Card className={`p-4 ${allPacked ? 'border-[var(--salmon)]' : ''}`}
+        <Card className={`${allPacked ? 'border-[var(--salmon)]' : ''}`}
           bg={allPacked ? 'color-mix(in srgb, var(--salmon) 8%, var(--surface))' : undefined}>
           <div className="flex items-center justify-between mb-2.5">
             <span className={`text-[15px] font-medium ${allPacked ? 'text-[var(--salmon)]' : 'text-[var(--text-primary)]'}`}>
@@ -264,7 +264,7 @@ export function PackingListPage() {
         {/* Weather */}
         {weather && <WeatherCardComponent summary={weather} />}
         {weatherOutOfRange && (
-          <Card className="p-4 flex items-center gap-3">
+          <Card className="flex items-center gap-3">
             <LucideIcon name="cloud-sun" size={20} className="text-[var(--text-secondary)] opacity-50" />
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[1.5px] text-[var(--blue-faint)]">Trip Forecast</p>
@@ -273,7 +273,7 @@ export function PackingListPage() {
           </Card>
         )}
         {weatherLoading && !weather && !weatherOutOfRange && (
-          <Card className="p-4 flex items-center gap-3">
+          <Card className="flex items-center gap-3">
             <Loader2 size={16} className="animate-spin text-[var(--lavender)]" />
             <span className="text-[13px] text-[var(--text-secondary)]">Loading forecast...</span>
           </Card>
@@ -299,7 +299,7 @@ export function PackingListPage() {
               </button>
             </div>
             {mustPackItems.length > 0 && (
-              <Card className="overflow-hidden">
+              <Card noPadding className="overflow-hidden">
                 {mustPackItems.map((item, i) => (
                   <div key={item.id}>
                     <ItemRow
@@ -356,7 +356,7 @@ export function PackingListPage() {
               <ProgressBar progress={catProgress} complete={catComplete} />
 
               {isExpanded && (
-                <Card className="mt-2 overflow-hidden">
+                <Card noPadding className="mt-2 overflow-hidden">
                   {catItems.length === 0 ? (
                     <p className="text-[13px] text-[var(--text-secondary)] p-4">No items here yet — tap + to add some</p>
                   ) : (

@@ -39,7 +39,7 @@ export function EditItemSheet({ item, existingCategories, onClose }: EditItemShe
       <p className="text-[15px] text-[var(--text-secondary)] mb-6">Update this item's details.</p>
 
       <div className="flex flex-col gap-3">
-        <Card className="flex items-center gap-3 p-4">
+        <Card className="flex items-center gap-3">
           <Tag size={18} className="text-[var(--lavender)] shrink-0" />
           <input
             type="text"
@@ -68,7 +68,7 @@ export function EditItemSheet({ item, existingCategories, onClose }: EditItemShe
               ))}
             </div>
             {!categories.includes(category) && (
-              <Card className="flex items-center gap-3 p-4 mt-2">
+              <Card className="flex items-center gap-3 mt-2">
                 <Folder size={18} className="text-[var(--lavender)] shrink-0" />
                 <input
                   type="text"
@@ -82,7 +82,7 @@ export function EditItemSheet({ item, existingCategories, onClose }: EditItemShe
           </div>
         )}
 
-        <Card className="flex items-center justify-between p-4">
+        <Card className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Hash size={18} className="text-[var(--lavender)]" />
             <span className="text-[16px] font-medium text-[var(--text-primary)]">Quantity</span>
@@ -90,7 +90,7 @@ export function EditItemSheet({ item, existingCategories, onClose }: EditItemShe
           <Stepper value={quantity} onChange={setQuantity} />
         </Card>
 
-        <Card className="flex items-center justify-between p-4">
+        <Card className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Star size={18} className="text-[var(--lavender)]" />
             <span className="text-[16px] font-medium text-[var(--text-primary)]">Must Pack</span>

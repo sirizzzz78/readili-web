@@ -217,7 +217,7 @@ export function TripSetupPage() {
           <div style={{ padding: '1.5rem var(--page-px) 1.5rem' }}>
             <h2 className="font-semibold text-[var(--text-primary)]" style={{ fontSize: 'var(--text-page-title)' }}>Where are you headed?</h2>
             <p className="text-[var(--text-secondary)]" style={{ fontSize: 'var(--text-body-sm)', marginTop: 'var(--step-heading-gap)' }}>Enter your destination city or country.</p>
-            <Card className="flex items-center gap-3 p-4" style={{ marginTop: 'var(--step-content-gap)' }}>
+            <Card className="flex items-center gap-3" style={{ marginTop: 'var(--step-content-gap)' }}>
               <MapPin size={18} className="text-[var(--lavender)] shrink-0" />
               <input
                 type="text"
@@ -294,7 +294,7 @@ export function TripSetupPage() {
             <p className="text-[var(--text-secondary)]" style={{ fontSize: 'var(--text-body-sm)', marginTop: 'var(--step-heading-gap)' }}>Pick your departure and return dates.</p>
 
             <div className="flex flex-col gap-3" style={{ marginTop: 'var(--step-content-gap)' }}>
-              <Card className="p-4">
+              <Card>
                 <div className="flex items-center gap-3">
                   <PlaneTakeoff size={18} className="text-[var(--lavender)] shrink-0" />
                   <span className="text-[15px] font-medium text-[var(--text-primary)]">Departure</span>
@@ -314,7 +314,7 @@ export function TripSetupPage() {
                   />
                 </div>
               </Card>
-              <Card className="p-4">
+              <Card>
                 <div className="flex items-center gap-3">
                   <PlaneLanding size={18} className="text-[var(--lavender)] shrink-0" />
                   <span className="text-[15px] font-medium text-[var(--text-primary)]">Return</span>
@@ -344,7 +344,7 @@ export function TripSetupPage() {
             <h2 className="font-semibold text-[var(--text-primary)]" style={{ fontSize: 'var(--text-page-title)' }}>Will you do laundry?</h2>
             <p className="text-[var(--text-secondary)]" style={{ fontSize: 'var(--text-body-sm)', marginTop: 'var(--step-heading-gap)' }}>Pick the days you'll have access to laundry.</p>
 
-            <Card className="p-4" style={{ marginTop: 'var(--step-content-gap)' }}>
+            <Card style={{ marginTop: 'var(--step-content-gap)' }}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <LucideIcon name="washing-machine" size={18} className="text-[var(--salmon)]" />
@@ -355,7 +355,7 @@ export function TripSetupPage() {
             </Card>
 
             {hasLaundry && (
-              <Card className="mt-3 p-4">
+              <Card className="mt-3">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-[15px] font-medium text-[var(--text-primary)]">Select laundry days</span>
                   {laundryDates.size > 0 && (
@@ -395,7 +395,7 @@ export function TripSetupPage() {
             <h2 className="font-semibold text-[var(--text-primary)]" style={{ fontSize: 'var(--text-page-title)' }}>How many days per outfit?</h2>
             <p className="text-[var(--text-secondary)]" style={{ fontSize: 'var(--text-body-sm)', marginTop: 'var(--step-heading-gap)' }}>Pack fewer outfits the more days you wear each one.</p>
 
-            <Card className="p-5" style={{ marginTop: 'var(--step-content-gap)' }}>
+            <Card style={{ marginTop: 'var(--step-content-gap)' }}>
               <div className="flex items-center gap-3 mb-5">
                 <Repeat size={18} className="text-[var(--lavender)]" />
                 <span className="text-[16px] font-medium text-[var(--text-primary)]">Days per outfit</span>

@@ -51,7 +51,7 @@ export function AddItemSheet({ tripId, existingCategories, preselectedCategory, 
 
       <div className="flex flex-col gap-3">
         {/* Name */}
-        <Card className="flex items-center gap-3 p-4">
+        <Card className="flex items-center gap-3">
           <Tag size={18} className="text-[var(--lavender)] shrink-0" />
           <input
             type="text"
@@ -92,7 +92,7 @@ export function AddItemSheet({ tripId, existingCategories, preselectedCategory, 
               </button>
             </div>
             {showCustom && (
-              <Card className="flex items-center gap-3 p-4 mt-2">
+              <Card className="flex items-center gap-3 mt-2">
                 <Folder size={18} className="text-[var(--lavender)] shrink-0" />
                 <input
                   type="text"
@@ -107,7 +107,7 @@ export function AddItemSheet({ tripId, existingCategories, preselectedCategory, 
         )}
 
         {/* Quantity */}
-        <Card className="flex items-center justify-between p-4">
+        <Card className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Hash size={18} className="text-[var(--lavender)]" />
             <span className="text-[16px] font-medium text-[var(--text-primary)]">Quantity</span>

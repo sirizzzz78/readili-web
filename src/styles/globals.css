@@ -58,11 +58,12 @@
   --touch-min: 44px;
   --row-height: 44px;
   --section-gap: 28px;
-  --page-px: clamp(24px, 5vw, 36px);
+  --page-px: clamp(28px, 6vw, 40px);
   --nav-height: 44px;
   --radius-card: 14px;
   --radius-button: 22px;
   --radius-chip: 12px;
+  --card-px: 20px;  /* default card inner padding */
   --step-heading-gap: clamp(0.75rem, 2vw, 1rem);   /* heading → subtitle */
   --step-content-gap: clamp(1.5rem, 3.5vw, 2rem);  /* subtitle → first control */
 }

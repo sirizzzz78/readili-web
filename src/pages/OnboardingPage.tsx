@@ -54,7 +54,7 @@ export function OnboardingPage({ onComplete }: OnboardingPageProps) {
             <h2 className="font-semibold text-[var(--text-primary)] tracking-tight" style={{ fontSize: 'var(--text-page-title)' }}>
               How it works
             </h2>
-            <Card className="w-full max-w-sm p-4">
+            <Card className="w-full max-w-sm">
               <div className="flex flex-col gap-5">
                 {[
                   { icon: <Map size={26} className="text-[var(--lavender)]" />, title: 'Tell us about your trip', sub: 'Destination, dates, activities — the essentials.' },

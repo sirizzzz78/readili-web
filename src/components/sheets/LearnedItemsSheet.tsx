@@ -28,7 +28,7 @@ export function LearnedItemsSheet({ onClose }: LearnedItemsSheetProps) {
   return (
     <div className="px-6 pb-8 max-h-[70dvh] overflow-y-auto">
       {items.length > 0 && (
-        <Card className="overflow-hidden mb-4">
+        <Card noPadding className="overflow-hidden mb-4">
           {items.map((item, i) => (
             <div key={item.name}>
               <div className="flex items-center gap-3 px-4 py-3">
@@ -54,7 +54,7 @@ export function LearnedItemsSheet({ onClose }: LearnedItemsSheetProps) {
           <p className="text-[11px] font-semibold uppercase tracking-[1.5px] text-[var(--blue-faint)] mb-2 px-1">
             Not used on last trip
           </p>
-          <Card className="overflow-hidden">
+          <Card noPadding className="overflow-hidden">
             {unusedNames.map((name, i) => (
               <div key={name}>
                 <div className="flex items-center justify-between px-4 py-2.5">
