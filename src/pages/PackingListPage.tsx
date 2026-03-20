@@ -219,7 +219,7 @@ export function PackingListPage() {
         </div>
       </div>
 
-      <div className="px-6 pb-12 flex flex-col gap-3">
+      <div className="px-6 pb-12 flex flex-col gap-5">
         {/* Archive banner */}
         {isPast && (
           <div className="flex items-center gap-3 p-4 rounded-[14px]"

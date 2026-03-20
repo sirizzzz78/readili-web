@@ -28,6 +28,7 @@
 
 /* CSS Custom Properties — Light Mode */
 :root {
+  /* Colors */
   --background: #FAFAFA;
   --surface: #FFFFFF;
   --surface-past: #F0F4F8;
@@ -44,7 +45,18 @@
   --blue-dark: #4A6880;
   --salmon-tint: #FAE8E0;
 
+  /* Typography */
   --font-family: 'Quicksand', system-ui, sans-serif;
+
+  /* iOS HIG layout tokens */
+  --touch-min: 44px;       /* Apple HIG minimum touch target */
+  --row-height: 44px;      /* Standard list row height */
+  --section-gap: 28px;     /* Gap between content sections */
+  --page-px: 20px;         /* Page horizontal padding (16pt iOS + extra for web) */
+  --nav-height: 44px;      /* Navigation bar height */
+  --radius-card: 14px;     /* Card corner radius */
+  --radius-button: 22px;   /* Button corner radius */
+  --radius-chip: 12px;     /* Chip/tag corner radius */
 }
 
 /* Dark Mode */
@@ -133,6 +145,18 @@ body {
 /* PWA safe area */
 .safe-bottom {
   padding-bottom: max(env(safe-area-inset-bottom), 16px);
+}
+
+/* iOS HIG: 44px minimum touch target on all interactive elements.
+   This catches buttons that forgot to add padding — the visual size
+   stays the same but the tappable area expands via min-height/width. */
+button, a, [role="button"], [role="switch"] {
+  min-height: var(--touch-min);
+}
+/* Opt-out class for decorative/chip buttons that are intentionally small */
+.touch-none {
+  min-height: 0;
+  min-width: 0;
 }
 
 /* Input styling */

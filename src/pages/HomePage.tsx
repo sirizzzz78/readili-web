@@ -153,11 +153,11 @@ export function HomePage() {
 
           {/* Upcoming */}
           {upcomingTrips.length > 0 && (
-            <div className="mb-4">
+            <div className="mb-6">
               <p className="text-[11px] font-semibold uppercase tracking-[1.5px] text-[var(--blue-faint)] mb-3">
                 Upcoming
               </p>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-3">
                 {upcomingTrips.map(trip => (
                   <TripCard
                     key={trip.id}
@@ -174,11 +174,11 @@ export function HomePage() {
 
           {/* Past */}
           {pastTrips.length > 0 && (
-            <div className="mb-4">
+            <div className="mb-6">
               <p className="text-[11px] font-semibold uppercase tracking-[1.5px] text-[var(--blue-faint)] mb-3">
                 Past
               </p>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-3">
                 {pastTrips.map(trip => (
                   <TripCard
                     key={trip.id}
