@@ -87,9 +87,17 @@ export function TripSetupPage() {
   const handleGenerate = async () => {
     setIsGenerating(true);
     try {
+      // Race weather fetch against 5s timeout so generation doesn't hang
+      const abortController = new AbortController();
       let weather = null;
       try {
-        weather = await fetchWeather(destination, startDate, endDate);
+        weather = await Promise.race([
+          fetchWeather(destination, startDate, endDate, abortController.signal),
+          new Promise<null>((_, reject) => setTimeout(() => {
+            abortController.abort();
+            reject(new Error('timeout'));
+          }, 5000)),
+        ]);
       } catch {
         showToast("Couldn't fetch weather — list generated without forecast", 'info');
       }

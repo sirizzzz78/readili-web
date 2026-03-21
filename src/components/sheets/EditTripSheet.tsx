@@ -39,8 +39,18 @@ export function EditTripSheet({ trip, onClose }: EditTripSheetProps) {
     setSaving(true);
 
     try {
+      // Race weather fetch against a 5s timeout so save doesn't hang
+      const abortController = new AbortController();
       let weather = null;
-      try { weather = await fetchWeather(trimmed, startDate, endDate); } catch {}
+      try {
+        weather = await Promise.race([
+          fetchWeather(trimmed, startDate, endDate, abortController.signal),
+          new Promise<null>((_, reject) => setTimeout(() => {
+            abortController.abort();
+            reject(new Error('timeout'));
+          }, 5000)),
+        ]);
+      } catch {}
 
       const tripData = {
         destination: trimmed, startDate, endDate, isInternational,
