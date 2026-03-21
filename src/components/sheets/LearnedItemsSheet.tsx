@@ -15,7 +15,7 @@ export function LearnedItemsSheet({ onClose }: LearnedItemsSheetProps) {
 
   if (items.length === 0 && unusedNames.length === 0) {
     return (
-      <div className="px-6 pb-12 flex flex-col items-center gap-4 pt-8">
+      <div className="flex flex-col items-center gap-4" style={{ padding: '2rem var(--card-px) 3rem' }}>
         <Brain size={48} className="text-[var(--lavender)] opacity-50" />
         <h3 className="text-[17px] font-semibold text-[var(--text-primary)]">No learned items yet</h3>
         <p className="text-[14px] text-[var(--text-secondary)] text-center px-10">

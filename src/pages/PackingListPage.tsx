@@ -17,6 +17,7 @@ import { AddItemSheet } from '../components/sheets/AddItemSheet';
 import { EditItemSheet } from '../components/sheets/EditItemSheet';
 import { EditTripSheet } from '../components/sheets/EditTripSheet';
 import { WeatherCardComponent } from '../components/packingList/WeatherCard';
+import { SuitcaseBackground } from '../components/packingList/SuitcaseBackground';
 import { ItemRow } from '../components/packingList/ItemRow';
 import { CATEGORY_ICONS } from '../lib/constants';
 import { isRestricted } from '../lib/carryOnRules';
@@ -222,9 +223,14 @@ export function PackingListPage() {
   }
 
   return (
-    <div className="min-h-dvh bg-[var(--background)]">
+    <div className="min-h-dvh relative" style={{ backgroundColor: 'var(--home-bg)' }}>
+      {/* Mountains + suitcase background at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 pointer-events-none" style={{ zIndex: 0 }}>
+        <SuitcaseBackground />
+      </div>
+
       {/* Nav bar */}
-      <div className="sticky top-0 z-20 bg-[var(--background)] pt-4 pb-2 flex items-center justify-between" style={{ padding: '1rem var(--page-px) 0.5rem' }}>
+      <div className="sticky top-0 z-10 pt-4 pb-2 flex items-center justify-between" style={{ padding: '1rem var(--page-px) 0.5rem', backgroundColor: 'var(--home-bg)' }}>
         <button onClick={() => navigate('/')} aria-label="Back to trips" className="p-2 -ml-2">
           <ChevronLeft size={24} className="text-[var(--lavender)]" />
         </button>
@@ -237,7 +243,7 @@ export function PackingListPage() {
         </div>
       </div>
 
-      <div className="pb-12 flex flex-col gap-5" style={{ padding: '0 var(--page-px) 3rem' }}>
+      <div className="relative z-[1] flex flex-col gap-5" style={{ padding: '0 var(--page-px) 340px' }}>
         {/* Archive banner */}
         {isPast && (
           <div className="flex items-center gap-3 p-5 rounded-[14px]"

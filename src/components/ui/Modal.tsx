@@ -91,7 +91,7 @@ export function Modal({ open, onClose, children, title, showHandle = true }: Mod
           </div>
         )}
         {title && (
-          <div className="flex items-center justify-between px-6 pt-2 pb-4">
+          <div className="flex items-center justify-between" style={{ padding: '0.5rem var(--card-px) 1rem' }}>
             <h2 className="text-[22px] font-semibold text-[var(--text-primary)]">{title}</h2>
             <button onClick={onClose} aria-label="Close" className="p-3 -m-1 rounded-full hover:bg-[var(--surface)]">
               <X size={18} className="text-[var(--text-secondary)]" />

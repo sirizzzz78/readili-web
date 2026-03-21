@@ -102,8 +102,8 @@ export function HomePage() {
             <button
               onClick={() => setShowLearned(true)}
               aria-label="Learned items"
-              className="flex items-center gap-2 px-8 py-2.5 rounded-full"
-              style={{ backgroundColor: 'color-mix(in srgb, var(--lavender) 12%, transparent)' }}
+              className="flex items-center gap-2 rounded-full"
+              style={{ padding: '6px 28px', backgroundColor: 'color-mix(in srgb, var(--lavender) 12%, transparent)' }}
             >
               <Brain size={16} className="text-[var(--lavender)]" />
               <span className="text-[12px] font-semibold text-[var(--lavender)]">Learned</span>
