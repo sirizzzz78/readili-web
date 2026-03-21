@@ -64,7 +64,7 @@
   --radius-card: 14px;
   --radius-button: 22px;
   --radius-chip: 12px;
-  --card-px: 20px;  /* default card inner padding */
+  --card-px: 24px;  /* default card inner padding */
   --step-heading-gap: clamp(0.75rem, 2vw, 1rem);   /* heading → subtitle */
   --step-content-gap: clamp(1.5rem, 3.5vw, 2rem);  /* subtitle → first control */
 }
