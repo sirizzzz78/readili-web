@@ -207,6 +207,7 @@ function getActivityItems(activity: string, outfits: number): PackingItemDraft[]
         item('Warm Gloves', 'Skiing'), item('Hand Warmers', 'Skiing'),
         item('Neck Gaiter', 'Skiing'), item('Lip Balm', 'Skiing'),
         item('Helmet', 'Skiing'), item('Thermal Underwear', 'Skiing'),
+        item('Water Bottle / Hydration Bladder', 'Skiing'),
       ];
     case 'Backcountry Skiing':
       return [
@@ -227,6 +228,7 @@ function getActivityItems(activity: string, outfits: number): PackingItemDraft[]
         item('First Aid Kit', 'Backcountry Skiing'), item('Repair Kit', 'Backcountry Skiing'),
         item('Headlamp', 'Backcountry Skiing'),
         item('Cell Phone / Radio / Satellite Phone', 'Backcountry Skiing'),
+        item('Water Bottle / Hydration Bladder', 'Backcountry Skiing'),
       ];
     case 'Wedding':
       return [
