@@ -24,6 +24,7 @@ export function TripSetupPage() {
 
   // State for all steps
   const [destination, setDestination] = useState('');
+  const [destCoords, setDestCoords] = useState<{ latitude: number; longitude: number } | null>(null);
   const [isInternational, setIsInternational] = useState(false);
   const [transportation, setTransportation] = useState<Set<string>>(new Set());
   const [startDate, setStartDate] = useState(toISODate(new Date()));
@@ -91,6 +92,7 @@ export function TripSetupPage() {
     try {
       const tripData = {
         destination: destination.trim(),
+        ...(destCoords ? { latitude: destCoords.latitude, longitude: destCoords.longitude } : {}),
         startDate,
         endDate,
         hasLaundry,
@@ -139,7 +141,7 @@ export function TripSetupPage() {
       setShowCompletion(true);
 
       // Fetch weather in background and add weather-specific items
-      fetchWeather(destination, startDate, endDate).then(async (weather) => {
+      fetchWeather(destination, startDate, endDate, undefined, destCoords ?? undefined).then(async (weather) => {
         if (!weather) return;
         const weatherDrafts = generatePackingList(tripData, weather);
         const currentItems = await db.packingItems.where('tripId').equals(trip.id).toArray();
@@ -231,7 +233,7 @@ export function TripSetupPage() {
             <h2 className="font-semibold text-[var(--text-primary)]" style={{ fontSize: 'var(--text-page-title)' }}>Where are you headed?</h2>
             <p className="text-[var(--text-secondary)]" style={{ fontSize: 'var(--text-body-sm)', marginTop: 'var(--step-heading-gap)' }}>Enter your destination city or country.</p>
             <div style={{ marginTop: 'var(--step-content-gap)' }}>
-              <LocationInput value={destination} onChange={setDestination} autoFocus />
+              <LocationInput value={destination} onChange={(v) => { setDestination(v); setDestCoords(null); }} onSelectCoords={(lat, lon) => setDestCoords({ latitude: lat, longitude: lon })} autoFocus />
             </div>
             {/* S1: Destination validation */}
             {destinationWarning && (

@@ -1,6 +1,8 @@
 export interface Trip {
   id: string;
   destination: string;
+  latitude?: number;
+  longitude?: number;
   startDate: string; // ISO date string
   endDate: string;
   hasLaundry: boolean;

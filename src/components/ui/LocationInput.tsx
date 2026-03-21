@@ -6,11 +6,12 @@ import { searchLocations, formatLocation, type LocationResult } from '../../lib/
 interface LocationInputProps {
   value: string;
   onChange: (value: string) => void;
+  onSelectCoords?: (lat: number, lon: number) => void;
   placeholder?: string;
   autoFocus?: boolean;
 }
 
-export function LocationInput({ value, onChange, placeholder = 'e.g. Tokyo, Japan', autoFocus }: LocationInputProps) {
+export function LocationInput({ value, onChange, onSelectCoords, placeholder = 'e.g. Tokyo, Japan', autoFocus }: LocationInputProps) {
   const [suggestions, setSuggestions] = useState<LocationResult[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [highlightIndex, setHighlightIndex] = useState(-1);
@@ -41,6 +42,7 @@ export function LocationInput({ value, onChange, placeholder = 'e.g. Tokyo, Japa
 
   const handleSelect = (loc: LocationResult) => {
     onChange(formatLocation(loc));
+    onSelectCoords?.(loc.latitude, loc.longitude);
     setSuggestions([]);
     setShowDropdown(false);
     inputRef.current?.blur();

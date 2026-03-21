@@ -22,6 +22,9 @@ interface EditTripSheetProps {
 export function EditTripSheet({ trip, onClose }: EditTripSheetProps) {
   const { showToast } = useToast();
   const [destination, setDestination] = useState(trip.destination);
+  const [destCoords, setDestCoords] = useState<{ latitude: number; longitude: number } | null>(
+    trip.latitude && trip.longitude ? { latitude: trip.latitude, longitude: trip.longitude } : null
+  );
   const [startDate, setStartDate] = useState(trip.startDate);
   const [endDate, setEndDate] = useState(trip.endDate);
   const [isInternational, setIsInternational] = useState(trip.isInternational);
@@ -41,7 +44,9 @@ export function EditTripSheet({ trip, onClose }: EditTripSheetProps) {
 
     try {
       const tripData = {
-        destination: trimmed, startDate, endDate, isInternational,
+        destination: trimmed,
+        ...(destCoords ? { latitude: destCoords.latitude, longitude: destCoords.longitude } : {}),
+        startDate, endDate, isInternational,
         transportation: [...transportation], hasLaundry,
         laundryDates: [...laundryDates], rewearDays, activities: [...activities],
       };
@@ -82,7 +87,7 @@ export function EditTripSheet({ trip, onClose }: EditTripSheetProps) {
       onClose();
 
       // Fetch weather in the background and merge weather-specific items if any
-      fetchWeather(trimmed, startDate, endDate).then(async (weather) => {
+      fetchWeather(trimmed, startDate, endDate, undefined, destCoords ?? undefined).then(async (weather) => {
         if (!weather) return;
         const weatherDrafts = generatePackingList(tripData, weather);
         const currentItems = await db.packingItems.where('tripId').equals(trip.id).toArray();
@@ -116,7 +121,7 @@ export function EditTripSheet({ trip, onClose }: EditTripSheetProps) {
     <div className="px-6 pb-8 max-h-[70dvh] overflow-y-auto">
       <div className="flex flex-col gap-5">
         {/* Destination */}
-        <LocationInput value={destination} onChange={setDestination} placeholder="Destination" />
+        <LocationInput value={destination} onChange={(v) => { setDestination(v); setDestCoords(null); }} onSelectCoords={(lat, lon) => setDestCoords({ latitude: lat, longitude: lon })} placeholder="Destination" />
 
         {/* Dates */}
         <div className="flex flex-col gap-2">

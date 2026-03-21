@@ -14,25 +14,64 @@ export interface WeatherSummary {
   forecasts: DailyForecast[];
 }
 
-// In-memory cache
+// In-memory cache (backed by localStorage for persistence)
 const cache = new Map<string, { summary: WeatherSummary; fetched: number }>();
 const MAX_CACHE = 20;
 const CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours
+const STORAGE_KEY = 'weatherCache';
 
 // Debounce: track pending fetches by cache key
 const pendingFetches = new Map<string, Promise<WeatherSummary>>();
+
+// Load persisted cache on startup
+try {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored) {
+    const entries: Record<string, { summary: WeatherSummary; fetched: number }> = JSON.parse(stored);
+    for (const [k, v] of Object.entries(entries)) {
+      cache.set(k, v);
+    }
+  }
+} catch { /* ignore corrupt cache */ }
+
+function persistCache() {
+  try {
+    const obj: Record<string, { summary: WeatherSummary; fetched: number }> = {};
+    for (const [k, v] of cache) obj[k] = v;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
+  } catch { /* quota exceeded — ignore */ }
+}
 
 /** @internal — exposed for tests only */
 export function _clearCache() {
   cache.clear();
   pendingFetches.clear();
+  try { localStorage.removeItem(STORAGE_KEY); } catch {}
+}
+
+/** Returns cached weather synchronously if available (even if stale). */
+export function getCachedWeather(
+  destination: string, tripStart: string, tripEnd: string
+): WeatherSummary | null {
+  const key = `${destination}|${tripStart}|${tripEnd}`;
+  return cache.get(key)?.summary ?? null;
+}
+
+/** Returns true if cached data is within TTL. */
+export function isWeatherCacheFresh(
+  destination: string, tripStart: string, tripEnd: string
+): boolean {
+  const key = `${destination}|${tripStart}|${tripEnd}`;
+  const entry = cache.get(key);
+  return !!entry && (Date.now() - entry.fetched < CACHE_TTL);
 }
 
 export async function fetchWeather(
   destination: string,
   tripStart: string,
   tripEnd: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  coords?: { latitude: number; longitude: number }
 ): Promise<WeatherSummary> {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -58,7 +97,7 @@ export async function fetchWeather(
   const pending = pendingFetches.get(cacheKey);
   if (pending) return pending;
 
-  const fetchPromise = fetchWeatherInner(destination, windowStart, windowEnd, cacheKey, signal);
+  const fetchPromise = fetchWeatherInner(destination, windowStart, windowEnd, cacheKey, signal, coords);
   pendingFetches.set(cacheKey, fetchPromise);
 
   try {
@@ -73,7 +112,8 @@ async function fetchWeatherInner(
   windowStart: Date,
   windowEnd: Date,
   cacheKey: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  coords?: { latitude: number; longitude: number }
 ): Promise<WeatherSummary> {
   // Track whether the *external* caller aborted (vs our internal timeout)
   let callerAborted = signal?.aborted ?? false;
@@ -92,16 +132,26 @@ async function fetchWeatherInner(
     }
 
     try {
-      const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(destination)}&count=1&language=en&format=json`;
-      const geoRes = await fetch(geoUrl, { signal: controller.signal });
-      if (!geoRes.ok) throw new Error('geocodingFailed');
-      const geoData = await geoRes.json();
+      let latitude: number;
+      let longitude: number;
 
-      if (!geoData.results?.length) {
-        throw new Error('geocodingFailed');
+      if (coords) {
+        // Use stored coordinates — skip geocoding entirely
+        latitude = coords.latitude;
+        longitude = coords.longitude;
+      } else {
+        // Fall back to geocoding (for older trips without stored coords)
+        const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(destination)}&count=1&language=en&format=json`;
+        const geoRes = await fetch(geoUrl, { signal: controller.signal });
+        if (!geoRes.ok) throw new Error('geocodingFailed');
+        const geoData = await geoRes.json();
+
+        if (!geoData.results?.length) {
+          throw new Error('geocodingFailed');
+        }
+
+        ({ latitude, longitude } = geoData.results[0]);
       }
-
-      const { latitude, longitude } = geoData.results[0];
 
       const fmt = (d: Date) => d.toISOString().split('T')[0];
       const forecastUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude.toFixed(4)}&longitude=${longitude.toFixed(4)}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode&start_date=${fmt(windowStart)}&end_date=${fmt(windowEnd)}&timezone=auto`;
@@ -148,6 +198,7 @@ async function fetchWeatherInner(
         if (oldest) cache.delete(oldest);
       }
       cache.set(cacheKey, { summary, fetched: Date.now() });
+      persistCache();
 
       return summary;
     } finally {

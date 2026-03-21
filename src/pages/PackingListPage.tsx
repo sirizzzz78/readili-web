@@ -21,7 +21,7 @@ import { ItemRow } from '../components/packingList/ItemRow';
 import { CATEGORY_ICONS } from '../lib/constants';
 import { isRestricted } from '../lib/carryOnRules';
 import { isBeforeToday } from '../lib/dateUtils';
-import { fetchWeather, type WeatherSummary } from '../lib/weatherService';
+import { fetchWeather, getCachedWeather, isWeatherCacheFresh, type WeatherSummary } from '../lib/weatherService';
 import { getUnusedNames } from '../db/hooks';
 import type { PackingItem } from '../db/models';
 
@@ -107,24 +107,39 @@ export function PackingListPage() {
     if (searchText) setExpandedCategories(new Set(groupedItems.map(([cat]) => cat)));
   }, [searchText, groupedItems]);
 
-  // Load weather with AbortController
+  // Load weather: show cached data immediately, refresh in background
   useEffect(() => {
     if (!trip) return;
-    setWeather(null);
-    setWeatherLoading(true);
     setWeatherOutOfRange(false);
     setWeatherError(false);
+
+    // Show cached data instantly (stale-while-revalidate)
+    const cached = getCachedWeather(trip.destination, trip.startDate, trip.endDate);
+    if (cached) {
+      setWeather(cached);
+      setWeatherLoading(false);
+      // If cache is fresh, skip network fetch
+      if (isWeatherCacheFresh(trip.destination, trip.startDate, trip.endDate)) return;
+    } else {
+      setWeather(null);
+      setWeatherLoading(true);
+    }
+
+    // Use stored coordinates if available
+    const coords = trip.latitude && trip.longitude ? { latitude: trip.latitude, longitude: trip.longitude } : undefined;
+
+    // Fetch fresh data in background
     const abortController = new AbortController();
     (async () => {
       try {
-        const w = await fetchWeather(trip.destination, trip.startDate, trip.endDate, abortController.signal);
+        const w = await fetchWeather(trip.destination, trip.startDate, trip.endDate, abortController.signal, coords);
         if (!abortController.signal.aborted) { setWeather(w); setWeatherLoading(false); }
       } catch (e: any) {
         if (abortController.signal.aborted) return;
         if (e?.message === 'outsideForecastWindow') {
-          setWeatherOutOfRange(true);
+          if (!cached) setWeatherOutOfRange(true);
         } else {
-          setWeatherError(true);
+          if (!cached) setWeatherError(true);
         }
         setWeatherLoading(false);
       }
