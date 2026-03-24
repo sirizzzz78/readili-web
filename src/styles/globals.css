@@ -256,6 +256,35 @@ a:focus-visible,
   outline-offset: 2px;
 }
 
+/* Tab bar */
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  height: calc(56px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  display: flex;
+  align-items: center;
+  background-color: var(--surface);
+  border-top: 1px solid var(--border);
+  z-index: 30;
+}
+
+@media (min-width: 640px) {
+  .tab-bar {
+    max-width: 560px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tab-bar {
+    max-width: 640px;
+  }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -263,5 +292,62 @@ a:focus-visible,
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Destination Hero — light mode */
+.hero-darken-gradient {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.25) 0%,
+    transparent 30%,
+    transparent 35%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+}
+.hero-glass-card {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+}
+.hero-nav-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  color: white;
+  border: none;
+  cursor: pointer;
+  min-height: 36px;
+}
+.dark-gradient-fallback {
+  background: linear-gradient(135deg, #C8D8E8, #E8F0F8);
+}
+
+@media (prefers-color-scheme: dark) {
+  .hero-darken-gradient {
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.35) 0%,
+      transparent 30%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.6) 100%
+    );
+  }
+  .hero-glass-card {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  .hero-nav-btn {
+    background: rgba(0, 0, 0, 0.4);
+    color: white;
+  }
+  .dark-gradient-fallback {
+    background: linear-gradient(135deg, #222830, #1A1F24);
   }
 }

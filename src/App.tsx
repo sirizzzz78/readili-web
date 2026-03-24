@@ -1,9 +1,10 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { Loader2, AlertTriangle } from 'lucide-react';
 import { OnboardingPage } from './pages/OnboardingPage';
 import { HomePage } from './pages/HomePage';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
+import { TabBar } from './components/ui/TabBar';
 import { useTrips } from './db/hooks';
 import { checkAndNotify } from './lib/notifications';
 import { checkStorageQuota } from './lib/storageCheck';
@@ -32,6 +33,16 @@ const TripSetupPage = lazyWithRetry(() =>
 const PackingListPage = lazyWithRetry(() =>
   import('./pages/PackingListPage').then(m => ({ default: m.PackingListPage }))
 );
+const StatsPage = lazyWithRetry(() =>
+  import('./pages/StatsPage').then(m => ({ default: m.StatsPage }))
+);
+
+function TabBarWrapper() {
+  const location = useLocation();
+  const showTabBar = location.pathname === '/' || location.pathname === '/stats';
+  if (!showTabBar) return null;
+  return <TabBar />;
+}
 
 function PageLoader() {
   return (
@@ -90,11 +101,13 @@ export function App() {
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/stats" element={<StatsPage />} />
               <Route path="/setup" element={<TripSetupPage />} />
               <Route path="/trip/:id" element={<PackingListPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Suspense>
+          <TabBarWrapper />
         </div>
       </ErrorBoundary>
     </BrowserRouter>

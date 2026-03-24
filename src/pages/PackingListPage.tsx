@@ -18,6 +18,8 @@ import { EditItemSheet } from '../components/sheets/EditItemSheet';
 import { EditTripSheet } from '../components/sheets/EditTripSheet';
 import { WeatherCardComponent } from '../components/packingList/WeatherCard';
 import { SuitcaseBackground } from '../components/packingList/SuitcaseBackground';
+import { DestinationHero } from '../components/packingList/DestinationHero';
+import { QuickStats } from '../components/packingList/QuickStats';
 import { ItemRow } from '../components/packingList/ItemRow';
 import { CATEGORY_ICONS } from '../lib/constants';
 import { isRestricted } from '../lib/carryOnRules';
@@ -229,21 +231,17 @@ export function PackingListPage() {
         <SuitcaseBackground />
       </div>
 
-      {/* Nav bar */}
-      <div className="sticky top-0 z-10 pt-4 pb-2 flex items-center justify-between" style={{ padding: '1rem var(--page-px) 0.5rem', backgroundColor: 'var(--home-bg)' }}>
-        <button onClick={() => navigate('/')} aria-label="Back to trips" className="p-2 -ml-2">
-          <ChevronLeft size={24} className="text-[var(--lavender)]" />
-        </button>
-        <h1 className="font-semibold text-[var(--text-primary)] truncate mx-3" style={{ fontSize: 'var(--text-card-title)' }}>
-          {trip.destination}
-        </h1>
-        <div className="flex items-center gap-3">
-          <button onClick={handleShare} aria-label="Share packing list" className="p-2 -m-1 rounded-full"><Share size={18} className="text-[var(--lavender)]" /></button>
-          <button onClick={() => setShowEditTrip(true)} aria-label="Edit trip" className="p-2 -m-1 rounded-full"><Pencil size={18} className="text-[var(--lavender)]" /></button>
-        </div>
-      </div>
-
       <div className="relative z-[1] flex flex-col gap-5" style={{ padding: '0 var(--page-px) 340px' }}>
+        {/* Hero card (photo + donut + trip info + nav) */}
+        <DestinationHero
+          trip={trip}
+          packed={packed}
+          total={total}
+          onBack={() => navigate('/')}
+          onShare={handleShare}
+          onEdit={() => setShowEditTrip(true)}
+        />
+
         {/* Archive banner */}
         {isPast && (
           <div className="flex items-center gap-3 p-5 rounded-[14px]"
@@ -270,22 +268,19 @@ export function PackingListPage() {
           </div>
         )}
 
-        {/* Progress card */}
-        <Card className={`${allPacked ? 'border-[var(--salmon)]' : ''}`}
-          bg={allPacked ? 'color-mix(in srgb, var(--salmon) 8%, var(--surface))' : undefined}>
-          <div className="flex items-center justify-between mb-2.5">
-            <span className={`text-[14px] font-medium ${allPacked ? 'text-[var(--salmon)]' : 'text-[var(--text-primary)]'}`}>
-              {packed} of {total} packed
-            </span>
-            <span className={`text-[14px] font-bold ${allPacked ? 'text-[var(--salmon)]' : 'text-[var(--lavender)]'}`}>
-              {Math.round(progress * 100)}%
-            </span>
-          </div>
-          <ProgressBar progress={progress} complete={allPacked} />
-          {allPacked && (
-            <p className="text-[12px] font-medium text-[var(--salmon)] mt-2">All packed — you're ready to go!</p>
-          )}
-        </Card>
+        {/* Quick Stats */}
+        <QuickStats
+          groupedItems={groupedItems}
+          mustPackItems={mustPackItems}
+          onScrollToCategory={(name) => {
+            const el = document.getElementById(`category-${name}`);
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              // Expand the category if collapsed
+              setExpandedCategories(prev => new Set([...prev, name]));
+            }
+          }}
+        />
 
         {/* Weather */}
         {weather && <WeatherCardComponent summary={weather} />}
@@ -319,7 +314,7 @@ export function PackingListPage() {
 
         {/* Must Pack */}
         {(mustPackItems.length > 0 || true) && (
-          <div>
+          <div id="category-Must Pack">
             <div className="flex items-center justify-between mb-2">
               <span className="text-[11px] font-semibold uppercase tracking-[1.5px] text-[var(--blue-faint)] flex items-center gap-1">
                 <Star size={11} /> Must Pack
@@ -363,7 +358,7 @@ export function PackingListPage() {
           const iconName = CATEGORY_ICONS[category] || 'tag';
 
           return (
-            <div key={category}>
+            <div key={category} id={`category-${category}`}>
               <div className="flex items-center gap-2 mb-1.5">
                 <div className={`w-7 h-7 flex items-center justify-center rounded-[9px] ${catComplete ? 'bg-[var(--salmon-tint)]' : 'bg-[var(--blue-tint)]'}`}>
                   <LucideIcon name={iconName} size={13} className={catComplete ? 'text-[var(--salmon)]' : 'text-[var(--lavender)]'} />

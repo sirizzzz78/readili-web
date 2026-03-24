@@ -210,7 +210,7 @@ export function HomePage() {
         aria-label="Create new trip"
         className="fixed z-20 w-14 h-14 rounded-full bg-[var(--salmon)] flex items-center justify-center shadow-lg active:scale-95 transition-transform"
         style={{
-          bottom: 'max(env(safe-area-inset-bottom, 0px) + 1.5rem, 2rem)',
+          bottom: 'calc(56px + max(env(safe-area-inset-bottom, 0px) + 0.75rem, 1rem))',
           right: 'max(calc((100vw - 480px) / 2 + 1.5rem), 1.5rem)',
           boxShadow: '0 4px 12px color-mix(in srgb, var(--salmon) 30%, transparent)',
         }}

@@ -47,6 +47,15 @@ export default defineConfig({
       },
     }),
   ],
+  server: {
+    proxy: {
+      '/pexels-api': {
+        target: 'https://api.pexels.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/pexels-api/, ''),
+      },
+    },
+  },
   test: {
     globals: true,
     environment: 'jsdom',

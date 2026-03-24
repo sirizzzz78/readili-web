@@ -15,6 +15,8 @@ export interface Trip {
   feedbackUnpacked: string[];
   feedbackWishlist: string;
   hasSubmittedFeedback: boolean;
+  destinationPhotoUrl?: string;
+  destinationPhotoCredit?: string;
 }
 
 export interface PackingItem {
