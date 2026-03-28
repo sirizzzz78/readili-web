@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { Loader2, AlertTriangle } from 'lucide-react';
 import { OnboardingPage } from './pages/OnboardingPage';
@@ -40,6 +40,15 @@ const SettingsPage = lazyWithRetry(() =>
   import('./pages/SettingsPage').then(m => ({ default: m.SettingsPage }))
 );
 
+function SettingsRedirect({ onDone }: { onDone: () => void }) {
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigate('/settings', { replace: true });
+    onDone();
+  }, [navigate, onDone]);
+  return null;
+}
+
 function TabBarWrapper() {
   const location = useLocation();
   const showTabBar = location.pathname === '/' || location.pathname === '/stats' || location.pathname === '/settings';
@@ -60,6 +69,7 @@ export function App() {
     () => localStorage.getItem('hasSeenOnboarding') === 'true'
   );
   const [storageWarning, setStorageWarning] = useState(false);
+  const [pendingSettingsNav, setPendingSettingsNav] = useState(false);
 
   const trips = useTrips();
 
@@ -88,11 +98,12 @@ export function App() {
   };
 
   if (!hasSeenOnboarding) {
-    return <OnboardingPage onComplete={handleOnboardingComplete} />;
+    return <OnboardingPage onComplete={handleOnboardingComplete} onCustomize={() => setPendingSettingsNav(true)} />;
   }
 
   return (
     <BrowserRouter basename="/readili-web">
+      {pendingSettingsNav && <SettingsRedirect onDone={() => setPendingSettingsNav(false)} />}
       <ErrorBoundary>
         <div className="app-shell">
           {storageWarning && (

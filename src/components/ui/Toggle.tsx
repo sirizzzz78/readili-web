@@ -10,14 +10,16 @@ export function Toggle({ checked, onChange }: ToggleProps) {
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-200 ${
+      className={`touch-none relative inline-flex items-center rounded-full transition-colors duration-200 shrink-0 ${
         checked ? 'bg-[var(--lavender)]' : 'bg-[var(--border)]'
       }`}
+      style={{ width: 38, height: 22, padding: 0, border: 'none', cursor: 'pointer' }}
     >
       <span
-        className={`inline-block h-5 w-5 rounded-full bg-white transition-transform duration-200 shadow-sm ${
-          checked ? 'translate-x-6' : 'translate-x-1'
+        className={`inline-block rounded-full bg-white transition-transform duration-200 shadow-sm ${
+          checked ? 'translate-x-[19px]' : 'translate-x-[3px]'
         }`}
+        style={{ width: 16, height: 16 }}
       />
     </button>
   );

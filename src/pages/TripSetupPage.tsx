@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, House, Globe, Plane, TrainFront, Car, PlaneTakeoff, PlaneLanding, Calendar, Clock, Repeat, CheckCircle2, Loader2, AlertTriangle } from 'lucide-react';
+import { X, House, Globe, Plane, TrainFront, Car, PlaneTakeoff, PlaneLanding, Calendar, Clock, Repeat, CheckCircle2, Loader2, AlertTriangle, Shirt, ChevronRight } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Toggle } from '../components/ui/Toggle';
@@ -189,6 +189,29 @@ export function TripSetupPage() {
             <span className="text-[14px] font-medium text-[var(--text-primary)]">{generatedItemCount}</span>
           </div>
         </div>
+        {/* Settings nudge (first trip only) */}
+        {!localStorage.getItem('readiLi.hasCustomized') && (
+          <button
+            className="w-full max-w-sm rounded-[14px] bg-[var(--surface)] border border-[var(--border)] flex items-center gap-3 text-left"
+            style={{ padding: 'var(--card-px)' }}
+            onClick={() => {
+              localStorage.setItem('readiLi.hasCustomized', 'true');
+              navigate('/settings');
+            }}
+          >
+            <div
+              className="w-9 h-9 shrink-0 flex items-center justify-center rounded-[10px]"
+              style={{ backgroundColor: 'color-mix(in srgb, var(--lavender) 12%, transparent)' }}
+            >
+              <Shirt size={20} className="text-[var(--lavender)]" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[14px] font-semibold text-[var(--text-primary)]">Personalize your lists</p>
+              <p className="text-[12px] text-[var(--text-secondary)]">Set clothing style & care preferences in Settings</p>
+            </div>
+            <ChevronRight size={13} className="text-[var(--text-secondary)] shrink-0" />
+          </button>
+        )}
         <div className="w-full max-w-sm flex flex-col gap-3 mt-4">
           <Button onClick={() => navigate(`/trip/${generatedTripId}`)}>View Packing List</Button>
           <Button variant="ghost" onClick={() => navigate('/')}>Done</Button>

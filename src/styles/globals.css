@@ -285,6 +285,34 @@ a:focus-visible,
   }
 }
 
+/* Voice pack FAB pulse animation */
+@keyframes voice-fab-ring {
+  0% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.35); opacity: 0; }
+  100% { transform: scale(1); opacity: 0; }
+}
+.voice-fab-pulse {
+  position: relative;
+}
+.voice-fab-pulse::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 3px solid var(--salmon);
+  animation: voice-fab-ring 1.5s ease-out infinite;
+  pointer-events: none;
+}
+
+/* Voice match highlight flash */
+@keyframes voice-match-flash-anim {
+  0% { background-color: color-mix(in srgb, var(--salmon) 25%, transparent); }
+  100% { background-color: transparent; }
+}
+.voice-match-flash {
+  animation: voice-match-flash-anim 1.2s ease-out;
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

@@ -1,21 +1,27 @@
 import { useState } from 'react';
-import { Backpack, Map, Compass, CheckCircle2 } from 'lucide-react';
+import { Backpack, Map, Compass, CheckCircle2, Shirt } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 
 interface OnboardingPageProps {
   onComplete: () => void;
+  onCustomize?: () => void;
 }
 
-export function OnboardingPage({ onComplete }: OnboardingPageProps) {
+export function OnboardingPage({ onComplete, onCustomize }: OnboardingPageProps) {
   const [page, setPage] = useState(0);
 
   const handleNext = () => {
-    if (page < 1) {
+    if (page < 2) {
       setPage(page + 1);
     } else {
       onComplete();
     }
+  };
+
+  const handleCustomize = () => {
+    onComplete();
+    onCustomize?.();
   };
 
   return (
@@ -76,12 +82,29 @@ export function OnboardingPage({ onComplete }: OnboardingPageProps) {
             </Card>
           </div>
         )}
+
+        {page === 2 && (
+          <div className="flex flex-col items-center justify-center h-full gap-6" style={{ padding: '0 var(--page-px)' }}>
+            <div className="w-36 h-36 flex items-center justify-center rounded-[14px]"
+              style={{ backgroundColor: 'color-mix(in srgb, var(--lavender) 15%, transparent)' }}>
+              <Shirt size={80} className="text-[var(--lavender)]" />
+            </div>
+            <div className="text-center max-w-md">
+              <h1 className="font-semibold text-[var(--text-primary)] tracking-tight leading-tight" style={{ fontSize: 'var(--text-hero)' }}>
+                Make it yours
+              </h1>
+              <p className="text-[var(--text-secondary)] mt-3 px-4" style={{ fontSize: 'var(--text-body)' }}>
+                Set your clothing style and personal care preferences — we'll tailor every list to you.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Dots + Next */}
+      {/* Dots + Actions */}
       <div className="px-6 pb-12 pt-4 flex flex-col items-center gap-5">
         <div className="flex gap-2">
-          {[0, 1].map(i => (
+          {[0, 1, 2].map(i => (
             <button
               key={i}
               onClick={() => setPage(i)}
@@ -95,10 +118,20 @@ export function OnboardingPage({ onComplete }: OnboardingPageProps) {
             </button>
           ))}
         </div>
-        <div className="w-full max-w-sm">
-          <Button onClick={handleNext}>
-            {page < 1 ? 'Next' : 'Get Started'}
-          </Button>
+        <div className="w-full max-w-sm flex flex-col gap-3">
+          {page < 2 ? (
+            <Button onClick={handleNext}>Next</Button>
+          ) : (
+            <>
+              <Button onClick={handleCustomize}>Customize Now</Button>
+              <button
+                onClick={onComplete}
+                className="text-[15px] font-medium text-[var(--text-secondary)] py-2"
+              >
+                Maybe Later
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

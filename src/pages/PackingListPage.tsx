@@ -21,11 +21,12 @@ import { SuitcaseBackground } from '../components/packingList/SuitcaseBackground
 import { DestinationHero } from '../components/packingList/DestinationHero';
 import { QuickStats } from '../components/packingList/QuickStats';
 import { ItemRow } from '../components/packingList/ItemRow';
+import { VoicePackButton } from '../components/packingList/VoicePackButton';
 import { CATEGORY_ICONS } from '../lib/constants';
 import { isRestricted } from '../lib/carryOnRules';
 import { isBeforeToday } from '../lib/dateUtils';
 import { fetchWeather, getCachedWeather, isWeatherCacheFresh, type WeatherSummary } from '../lib/weatherService';
-import { getUnusedNames } from '../db/hooks';
+import { getUnusedNames, togglePacked } from '../db/hooks';
 import type { PackingItem } from '../db/models';
 
 export function PackingListPage() {
@@ -50,6 +51,7 @@ export function PackingListPage() {
   const [editingItem, setEditingItem] = useState<PackingItem | null>(null);
   const [showEditTrip, setShowEditTrip] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [highlightedItemId, setHighlightedItemId] = useState<string | null>(null);
 
   const unusedNames = useMemo(() => getUnusedNames(), [items]);
 
@@ -157,6 +159,23 @@ export function PackingListPage() {
       return next;
     });
   };
+
+  const handleVoiceHighlight = useCallback((itemId: string) => {
+    // Expand the category containing this item
+    const item = items.find(i => i.id === itemId);
+    if (item && !item.isMustPack) {
+      setExpandedCategories(prev => new Set([...prev, item.category]));
+    }
+    // Scroll to the item
+    setTimeout(() => {
+      const el = document.getElementById(`item-${itemId}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setHighlightedItemId(itemId);
+        setTimeout(() => setHighlightedItemId(null), 1200);
+      }
+    }, 100);
+  }, [items]);
 
   const handleShare = useCallback(() => {
     if (!trip) return;
@@ -331,7 +350,7 @@ export function PackingListPage() {
             {mustPackItems.length > 0 && (
               <Card noPadding className="overflow-hidden">
                 {mustPackItems.map((item, i) => (
-                  <div key={item.id}>
+                  <div key={item.id} id={`item-${item.id}`} className={highlightedItemId === item.id ? 'voice-match-flash' : ''}>
                     <ItemRow
                       item={item}
                       isFlight={isFlight}
@@ -391,7 +410,7 @@ export function PackingListPage() {
                     <p className="text-[12px] text-[var(--text-secondary)] p-4">No items here yet — tap + to add some</p>
                   ) : (
                     catItems.map((item, i) => (
-                      <div key={item.id}>
+                      <div key={item.id} id={`item-${item.id}`} className={highlightedItemId === item.id ? 'voice-match-flash' : ''}>
                         <ItemRow
                           item={item}
                           isFlight={isFlight}
@@ -460,6 +479,16 @@ export function PackingListPage() {
         onCancel={() => setDeleteTarget(null)}
         confirmLabel="Delete"
       />
+
+      {/* Voice pack FAB */}
+      {!isPast && (
+        <VoicePackButton
+          items={items}
+          onPackItem={(id) => togglePacked(id, true).catch(() => {})}
+          onUnpackItem={(id) => togglePacked(id, false).catch(() => {})}
+          onHighlightItem={handleVoiceHighlight}
+        />
+      )}
     </div>
   );
 }

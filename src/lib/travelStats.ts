@@ -6,6 +6,12 @@ export interface ParsedDestination {
   country: string;
 }
 
+export interface TripPin {
+  latitude: number;
+  longitude: number;
+  label: string;
+}
+
 export interface TravelStats {
   countriesVisited: string[];
   continentsVisited: string[];
@@ -18,6 +24,7 @@ export interface TravelStats {
   totalItems: number;
   efficiencyPercent: number;
   citiesPerContinent: Record<string, number>;
+  tripPins: TripPin[];
 }
 
 const COUNTRY_ALIASES: Record<string, string> = {
@@ -123,6 +130,20 @@ export function computeTravelStats(
 
   const efficiencyPercent = totalItems > 0 ? Math.round(totalItemsPacked / totalItems * 100) : 0;
 
+  // Trip pins — deduplicated by city name
+  const seenCities = new Set<string>();
+  const tripPins: TripPin[] = [];
+  for (const trip of pastTrips) {
+    if (trip.latitude && trip.longitude) {
+      const { city } = parseDestination(trip.destination);
+      const key = city.toLowerCase();
+      if (!seenCities.has(key)) {
+        seenCities.add(key);
+        tripPins.push({ latitude: trip.latitude, longitude: trip.longitude, label: city });
+      }
+    }
+  }
+
   // Cities per continent (include all 7 continents)
   const allContinents = ['North America', 'South America', 'Europe', 'Africa', 'Asia', 'Oceania', 'Antarctica'];
   const citiesPerContinent: Record<string, number> = {};
@@ -142,5 +163,6 @@ export function computeTravelStats(
     totalItems,
     efficiencyPercent,
     citiesPerContinent,
+    tripPins,
   };
 }

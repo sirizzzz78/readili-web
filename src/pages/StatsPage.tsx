@@ -2,7 +2,7 @@ import { useMemo, useState, useEffect } from 'react';
 import { Building, Briefcase, Star } from 'lucide-react';
 import { useTrips } from '../db/hooks';
 import { usePackingItemsForTrips } from '../hooks/usePackingItemsForTrips';
-import { computeTravelStats } from '../lib/travelStats';
+import { computeTravelStats, parseDestination, type TripPin } from '../lib/travelStats';
 import { WorldMap } from '../components/stats/WorldMap';
 import { fetchDestinationPhoto, getCachedPhoto, isPhotoCacheFresh, type PhotoResult } from '../lib/destinationPhoto';
 
@@ -11,6 +11,59 @@ export function StatsPage() {
   const allItems = usePackingItemsForTrips(trips);
 
   const stats = useMemo(() => computeTravelStats(trips, allItems), [trips, allItems]);
+
+  // Geocode past trips that don't have stored coordinates
+  const [geocodedPins, setGeocodedPins] = useState<TripPin[]>([]);
+
+  // Stable key for trip list — only re-run geocoding when trips actually change
+  const tripKey = useMemo(() => trips.map(t => t.id).join(','), [trips]);
+
+  useEffect(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const pastTrips = trips.filter(t => new Date(t.endDate) < today);
+    const needsGeocode = pastTrips.filter(t => !t.latitude || !t.longitude);
+
+    if (needsGeocode.length === 0) {
+      setGeocodedPins([]);
+      return;
+    }
+
+    let cancelled = false;
+    const seenCities = new Set<string>();
+    // Skip cities that already have stored coords
+    for (const t of pastTrips) {
+      if (t.latitude && t.longitude) {
+        seenCities.add(parseDestination(t.destination).city.toLowerCase());
+      }
+    }
+
+    (async () => {
+      const pins: TripPin[] = [];
+      for (const trip of needsGeocode) {
+        const { city } = parseDestination(trip.destination);
+        const key = city.toLowerCase();
+        if (seenCities.has(key)) continue;
+        seenCities.add(key);
+
+        try {
+          const res = await fetch(
+            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`
+          );
+          const data = await res.json();
+          if (data.results?.[0] && !cancelled) {
+            pins.push({ latitude: data.results[0].latitude, longitude: data.results[0].longitude, label: city });
+          }
+        } catch { /* skip */ }
+      }
+      if (!cancelled) setGeocodedPins(pins);
+    })();
+
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tripKey]);
+
+  const allPins = useMemo(() => [...stats.tripPins, ...geocodedPins], [stats.tripPins, geocodedPins]);
 
   // Photo for top destination
   const [topPhoto, setTopPhoto] = useState<PhotoResult | null>(null);
@@ -44,7 +97,7 @@ export function StatsPage() {
           </h1>
 
           {/* World Map */}
-          <WorldMap visitedContinents={stats.continentsVisited} countriesCount={stats.countriesVisited.length} />
+          <WorldMap visitedContinents={stats.continentsVisited} countriesCount={stats.countriesVisited.length} tripPins={allPins} />
 
           {/* Empty state message */}
           {stats.tripsCompleted === 0 && (

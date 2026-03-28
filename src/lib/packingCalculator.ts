@@ -9,13 +9,23 @@ export interface PackingItemDraft {
 
 export interface ClothingPreferences {
   gender: 'none' | 'masculine' | 'feminine';
-  bottoms: 'pants' | 'skirts' | 'both';
+  skirtsRatio: number;
+  menstrualCare: boolean;
+  groomingKit: boolean;
+  hairStyling: boolean;
+  contactLens: boolean;
+  makeup: boolean;
 }
 
 export function getClothingPreferences(): ClothingPreferences {
   return {
     gender: (localStorage.getItem('readiLi.genderPref') as ClothingPreferences['gender']) || 'none',
-    bottoms: (localStorage.getItem('readiLi.bottomsPref') as ClothingPreferences['bottoms']) || 'pants',
+    skirtsRatio: Number(localStorage.getItem('readiLi.skirtsRatio') ?? '0'),
+    menstrualCare: localStorage.getItem('readiLi.menstrualCare') === 'true',
+    groomingKit: localStorage.getItem('readiLi.groomingKit') === 'true',
+    hairStyling: localStorage.getItem('readiLi.hairStyling') === 'true',
+    contactLens: localStorage.getItem('readiLi.contactLens') === 'true',
+    makeup: localStorage.getItem('readiLi.makeup') === 'true',
   };
 }
 
@@ -34,7 +44,7 @@ export function generatePackingList(
   weather?: WeatherSummary | null,
   preferences?: ClothingPreferences
 ): PackingItemDraft[] {
-  const prefs = preferences ?? { gender: 'none', bottoms: 'pants' };
+  const prefs = preferences ?? { gender: 'none', skirtsRatio: 0, menstrualCare: false, groomingKit: false, hairStyling: false, contactLens: false, makeup: false };
   let items: PackingItemDraft[] = [];
 
   const effectiveDays = getLongestStretch(trip);
@@ -49,33 +59,37 @@ export function generatePackingList(
     { name: 'Tops', category: 'Clothing', quantity: outfits, isMustPack: false },
   );
 
-  // Bottoms: preference-aware
-  if (prefs.gender === 'none') {
-    items.push({ name: 'Bottoms', category: 'Clothing', quantity: bottomsQty, isMustPack: false });
-  } else if (prefs.bottoms === 'both') {
-    items.push(
-      { name: 'Pants', category: 'Clothing', quantity: Math.floor(bottomsQty / 2) || 1, isMustPack: false },
-      { name: 'Skirts', category: 'Clothing', quantity: Math.ceil(bottomsQty / 2), isMustPack: false },
-    );
-  } else {
-    const name = prefs.bottoms === 'skirts' ? 'Skirts' : 'Pants';
-    items.push({ name, category: 'Clothing', quantity: bottomsQty, isMustPack: false });
+  // Bottoms: preference-aware with skirts ratio slider
+  {
+    const skirtsQty = Math.round(bottomsQty * prefs.skirtsRatio / 100);
+    const pantsQty = bottomsQty - skirtsQty;
+    if (pantsQty > 0) items.push({ name: 'Pants', category: 'Clothing', quantity: pantsQty, isMustPack: false });
+    if (skirtsQty > 0) items.push({ name: 'Skirts', category: 'Clothing', quantity: skirtsQty, isMustPack: false });
+    if (pantsQty === 0 && skirtsQty === 0) items.push({ name: 'Pants', category: 'Clothing', quantity: 1, isMustPack: false });
   }
 
   items.push(
     { name: 'Underwear', category: 'Clothing', quantity: outfits, isMustPack: false },
     { name: 'Socks', category: 'Clothing', quantity: outfits, isMustPack: false },
     { name: 'Pajamas', category: 'Clothing', quantity: 1, isMustPack: false },
-    { name: 'Toiletries Kit', category: 'Toiletries', quantity: 1, isMustPack: false },
   );
 
-  // Feminine toiletry additions
-  if (prefs.gender === 'feminine') {
-    items.push(
-      { name: 'Hair Ties', category: 'Toiletries', quantity: 1, isMustPack: false },
-      { name: 'Makeup Bag', category: 'Toiletries', quantity: 1, isMustPack: false },
-    );
-  }
+  // Toiletries (broken out)
+  items.push(
+    { name: 'Toothbrush & Toothpaste', category: 'Toiletries', quantity: 1, isMustPack: false },
+    { name: 'Deodorant', category: 'Toiletries', quantity: 1, isMustPack: false },
+    { name: 'Shampoo & Conditioner', category: 'Toiletries', quantity: 1, isMustPack: false },
+    { name: 'Body Wash / Soap', category: 'Toiletries', quantity: 1, isMustPack: false },
+    { name: 'Lip Balm', category: 'Toiletries', quantity: 1, isMustPack: false },
+    { name: 'Hair Brush / Comb', category: 'Toiletries', quantity: 1, isMustPack: false },
+  );
+
+  // Personal care toggle items (opt-in via Settings)
+  if (prefs.menstrualCare) items.push({ name: 'Menstrual Care Products', category: 'Toiletries', quantity: 1, isMustPack: false });
+  if (prefs.groomingKit) items.push({ name: 'Shaving / Grooming Kit', category: 'Toiletries', quantity: 1, isMustPack: false });
+  if (prefs.hairStyling) items.push({ name: 'Hair Styling Tools', category: 'Toiletries', quantity: 1, isMustPack: false });
+  if (prefs.contactLens) items.push({ name: 'Contact Lens Kit', category: 'Toiletries', quantity: 1, isMustPack: false });
+  if (prefs.makeup) items.push({ name: 'Makeup Bag', category: 'Toiletries', quantity: 1, isMustPack: false });
 
   // Health
   items.push(
@@ -223,21 +237,12 @@ function getActivityItems(activity: string, outfits: number, prefs: ClothingPref
         item('Repair Kit', 'Backpacking'), item('Permits', 'Backpacking'),
       ];
     case 'Business':
-      if (prefs.gender === 'feminine') {
-        return [
-          { name: 'Blouses', category: 'Business', quantity: outfits, isMustPack: false },
-          item('Blazer', 'Business'), item('Dress Shoes', 'Business'),
-          { name: 'Dress Socks', category: 'Business', quantity: outfits, isMustPack: false },
-          item('Belt', 'Business'), item('Laptop + Charger', 'Business'),
-          item('Portfolio / Notebook', 'Business'), item('Statement Jewelry', 'Business'),
-        ];
-      }
       return [
-        { name: 'Dress Shirts', category: 'Business', quantity: outfits, isMustPack: false },
+        { name: 'Dress Shirts / Blouses', category: 'Business', quantity: outfits, isMustPack: false },
         item('Blazer', 'Business'), item('Dress Shoes', 'Business'),
         { name: 'Dress Socks', category: 'Business', quantity: outfits, isMustPack: false },
         item('Belt', 'Business'), item('Laptop + Charger', 'Business'),
-        item('Portfolio / Notebook', 'Business'), item('Tie', 'Business'),
+        item('Portfolio / Notebook', 'Business'), item('Tie / Statement Jewelry', 'Business'),
       ];
     case 'Gym / Fitness':
       return [
@@ -303,6 +308,18 @@ function getActivityItems(activity: string, outfits: number, prefs: ClothingPref
         item('Fanny Pack', 'Festival'), item('Portable Charger / Power Bank', 'Festival'),
         item('Hand Sanitizer', 'Festival'), item('Water Bottle', 'Festival'),
         item('Earplugs', 'Festival'), item('Bandana', 'Festival'),
+      ];
+    case 'Photography':
+      return [
+        item('Camera / Mirrorless Body', 'Photography'),
+        item('Lenses', 'Photography'),
+        item('Tripod', 'Photography'),
+        item('Camera Batteries', 'Photography'),
+        item('Memory Cards', 'Photography'),
+        item('Camera Charger & Cables', 'Photography'),
+        item('Lens Cleaning Kit', 'Photography'),
+        item('Camera Bag / Insert', 'Photography'),
+        item('Action Camera (GoPro / Insta360)', 'Photography'),
       ];
     default:
       return [];

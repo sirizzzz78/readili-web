@@ -32,11 +32,13 @@ describe('generatePackingList', () => {
     const items = generatePackingList(makeTrip());
     expect(hasItem(items, 'Phone Charger')).toBe(true);
     expect(hasItem(items, 'Tops')).toBe(true);
-    expect(hasItem(items, 'Bottoms')).toBe(true);
+    expect(hasItem(items, 'Pants')).toBe(true);
     expect(hasItem(items, 'Underwear')).toBe(true);
     expect(hasItem(items, 'Socks')).toBe(true);
     expect(hasItem(items, 'Pajamas')).toBe(true);
-    expect(hasItem(items, 'Toiletries Kit')).toBe(true);
+    expect(hasItem(items, 'Toothbrush & Toothpaste')).toBe(true);
+    expect(hasItem(items, 'Deodorant')).toBe(true);
+    expect(hasItem(items, 'Shampoo & Conditioner')).toBe(true);
     expect(hasItem(items, 'Prescription Medications')).toBe(true);
     expect(hasItem(items, "Driver's License / Real ID")).toBe(true);
   });
@@ -55,7 +57,7 @@ describe('generatePackingList', () => {
     expect(findItem(items, 'Tops')?.quantity).toBe(7);
     expect(findItem(items, 'Underwear')?.quantity).toBe(7);
     expect(findItem(items, 'Socks')?.quantity).toBe(7);
-    expect(findItem(items, 'Bottoms')?.quantity).toBe(4); // ceil(7/2)
+    expect(findItem(items, 'Pants')?.quantity).toBe(4); // ceil(7/2)
   });
 
   it('reduces outfits with rewear > 1', () => {
@@ -116,7 +118,7 @@ describe('generatePackingList', () => {
 
   it('adds Business items with outfit-scaled quantities', () => {
     const items = generatePackingList(makeTrip({ activities: ['Business'] }));
-    expect(findItem(items, 'Dress Shirts')?.quantity).toBe(7);
+    expect(findItem(items, 'Dress Shirts / Blouses')?.quantity).toBe(7);
     expect(hasItem(items, 'Blazer')).toBe(true);
     expect(hasItem(items, 'Dress Shoes')).toBe(true);
   });

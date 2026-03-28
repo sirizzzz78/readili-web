@@ -17,6 +17,7 @@ export const ACTIVITIES: ActivityDef[] = [
   { id: 'Gym / Fitness', label: 'Gym / Fitness', icon: 'dumbbell', subtitle: 'Workout clothes, running shoes', isEvent: false },
   { id: 'Skiing', label: 'Skiing', icon: 'snowflake', subtitle: 'Goggles, base layers, warmers', isEvent: false },
   { id: 'Backcountry Skiing', label: 'Backcountry Skiing', icon: 'mountain-snow', subtitle: 'Beacon, skins, avalanche gear', isEvent: false },
+  { id: 'Photography', label: 'Photography', icon: 'camera', subtitle: 'Camera, tripod, lenses, cables', isEvent: false },
   { id: 'Wedding', label: 'Wedding', icon: 'heart', subtitle: 'Formal attire, gift, accessories', isEvent: true },
   { id: 'Formal Dinner', label: 'Formal Dinner', icon: 'utensils', subtitle: 'Formal outfit, dress shoes', isEvent: true },
   { id: 'Concert', label: 'Concert', icon: 'mic', subtitle: 'Comfy shoes, earplugs, charger', isEvent: true },
@@ -53,6 +54,7 @@ export const CATEGORY_ICONS: Record<string, string> = {
   'Gym / Fitness': 'dumbbell',
   'Skiing': 'snowflake',
   'Backcountry Skiing': 'mountain-snow',
+  'Photography': 'camera',
   'Wedding': 'heart',
   'Formal Dinner': 'utensils',
   'Concert': 'mic',
@@ -62,7 +64,7 @@ export const CATEGORY_ICONS: Record<string, string> = {
 export const CATEGORY_OPTIONS = [
   'Essentials', 'Clothing', 'Toiletries', 'Health',
   'Sightseeing', 'Beach', 'Swimming', 'Hiking', 'Camping', 'Backpacking',
-  'Business', 'Gym / Fitness', 'Skiing',
+  'Business', 'Gym / Fitness', 'Skiing', 'Photography',
   'Wedding', 'Formal Dinner', 'Concert', 'Festival',
 ];
 
